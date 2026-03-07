@@ -137,3 +137,11 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Custom added ignores
+.env
+pycache/
+*.pyc
+venv/
+node_modules/
+dist/
