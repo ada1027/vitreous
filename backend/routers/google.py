@@ -58,4 +58,8 @@ async def google_callback(code: str):
             raise HTTPException(status_code=response.status_code, detail=response.text)
         token_data = response.json()
         
-    return token_data
+    access_token = token_data.get("access_token")
+    if not access_token:
+        raise HTTPException(status_code=500, detail="Failed to retrieve access token from Google")
+        
+    return {"access_token": access_token}
