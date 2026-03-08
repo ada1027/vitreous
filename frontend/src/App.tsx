@@ -3,6 +3,8 @@ import GoogleConnections from './GoogleConnections';
 import GithubConnections from './GithubConnections';
 import AppDetail from './AppDetail';
 import ConnectionUpdated from './ConnectionUpdated';
+import DormantAccounts from './DormantAccounts';
+import DormantAppDetail from './DormantAppDetail';
 
 function App() {
   const pathname = window.location.pathname;
@@ -15,6 +17,12 @@ function App() {
   }
   if (pathname.startsWith('/connections/github')) {
     return <GithubConnections />;
+  }
+  if (pathname.startsWith('/dormant-app/')) {
+    return <DormantAppDetail />;
+  }
+  if (pathname.startsWith('/dormant')) {
+    return <DormantAccounts />;
   }
   if (pathname.startsWith('/app/'))
     return <AppDetail />;

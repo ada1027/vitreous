@@ -36,7 +36,7 @@ export default function Dashboard() {
             <h2 className="text-xl font-medium ml-12">Alerts</h2>
             <p className="text-sm ml-12 mt-2">2 data breaches detected</p>
           </div>
-          <div className="relative w-64 h-40 bg-white/10 rounded-2xl p-4 shadow-[0_0_10px_10px_rgba(255,242,202,0.25)]">
+          <div onClick={() => window.location.href = '/dormant'} className="cursor-pointer relative w-64 h-40 bg-white/10 rounded-2xl p-4 shadow-[0_0_10px_10px_rgba(255,242,202,0.25)] hover:bg-white/20 transition-colors">
             <div className="absolute left-4 top-4 text-2xl">💤</div>
             <h2 className="text-xl font-medium ml-12">Dormant</h2>
             <p className="text-sm ml-12 mt-2">
