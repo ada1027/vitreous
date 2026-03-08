@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useScan } from './context/ScanContext';
+import { useNavigate } from 'react-router-dom';
 
 const imgSearch = "https://www.figma.com/api/mcp/asset/3b8723bd-848a-4b89-84bf-fb2f1cfd176e";
 const imgThreeDots = "https://www.figma.com/api/mcp/asset/07adea7f-1661-492f-9c72-6753874078e3";
@@ -14,6 +15,7 @@ const getFaviconUrl = (domain: string) =>
 
 export default function GoogleConnections() {
   const { scanData, setScanData, loading } = useScan();
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
   const [sortByRecent, setSortByRecent] = useState(true);
@@ -24,6 +26,9 @@ export default function GoogleConnections() {
     if (!scanData?.services || scanData.services.length === 0) return;
     const firstService = scanData.services[0];
     if (!firstService.risk_level && !firstService.category && !analyzeTriggered.current) {
+      if (localStorage.getItem('vitreous_analyzed') === 'true') {
+        return;
+      }
       analyzeTriggered.current = true;
       setAnalyzing(true);
       fetch('http://localhost:8000/api/gmail/analyze', {
@@ -35,6 +40,7 @@ export default function GoogleConnections() {
         .then(data => {
           if (data?.services) {
             setScanData({ ...scanData, services: data.services, insight: data.insight || scanData.insight });
+            localStorage.setItem('vitreous_analyzed', 'true');
           }
         })
         .catch(err => console.error('Analyze failed', err))
@@ -68,13 +74,13 @@ export default function GoogleConnections() {
     >
       {/* sidebar */}
       <div className="w-48 flex flex-col items-center py-8 space-y-8 bg-gradient-to-b from-[#2c4451] to-[#606779] shadow-[2px_3px_0px_0px_rgba(42,42,42,0.47)]">
-        <img src={imgLogo} className="w-24 h-24 cursor-pointer" alt="logo" onClick={() => (window.location.href = '/dashboard')} />
-        <div className="relative cursor-pointer" onClick={() => (window.location.href = '/connections/google')}>
+        <img src={imgLogo} className="w-24 h-24 cursor-pointer" alt="logo" onClick={() => navigate('/dashboard')} />
+        <div className="relative cursor-pointer" onClick={() => navigate('/connections/google', { replace: true })}>
           <div className="bg-gradient-to-b from-[#2c4451] to-[#606779] p-2 rounded-lg shadow-[0_0_50px_0_#696969]">
             <img src={imgGoogleIcon} className="w-12 h-12" alt="google" />
           </div>
         </div>
-        <div className="relative cursor-pointer opacity-50" onClick={() => (window.location.href = '/connections/github')}>
+        <div className="relative cursor-pointer opacity-50" onClick={() => navigate('/connections/github')}>
           <img src={imgGithubIcon} className="w-12 h-12" alt="github" />
         </div>
       </div>
@@ -153,7 +159,7 @@ export default function GoogleConnections() {
             return (
               <div
                 key={c.domain}
-                onClick={() => window.location.href = `/app/${encodeURIComponent(c.domain)}?provider=Google`}
+                onClick={() => navigate(`/app/${encodeURIComponent(c.domain)}?provider=Google`, { state: { service: c } })}
                 className={`relative flex items-center bg-white/10 rounded-2xl p-4 cursor-pointer hover:bg-white/20 transition-all ${borderClass}`}
               >
                 <img

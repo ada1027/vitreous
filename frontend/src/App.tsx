@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import GoogleConnections from './GoogleConnections';
 import GithubConnections from './GithubConnections';
@@ -9,11 +10,13 @@ import { useScan } from './context/ScanContext';
 
 function App() {
   const { setScanData, googleToken, setGoogleToken, loading, setLoading } = useScan();
-  const pathname = window.location.pathname;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const pathname = location.pathname;
   const scanCalledRef = useRef(false);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     const urlToken = params.get('google_token');
 
     // 1. Save token
@@ -25,7 +28,7 @@ function App() {
       localStorage.setItem('google_access_token', urlToken);
       setGoogleToken(urlToken);
       // clean up URL
-      window.history.replaceState({}, document.title, pathname);
+      navigate(pathname, { replace: true });
     } else if (tokenToUse && !googleToken) {
       setGoogleToken(tokenToUse);
     }
@@ -33,14 +36,14 @@ function App() {
     // 2. Auth Guard & Trigger scan on load
     if (pathname.startsWith('/dashboard') && !tokenToUse) {
       console.log("[DEBUG] No token found, redirecting to login...");
-      window.location.href = '/';
+      navigate('/');
       return;
     }
 
     if (urlToken || (tokenToUse && pathname !== '/')) {
       if (scanCalledRef.current) return;
       scanCalledRef.current = true;
-      if (pathname === '/') window.history.pushState({}, '', '/dashboard');
+      if (pathname === '/') navigate('/dashboard');
       
       console.log("[DEBUG] Found valid token. Firing backend scan to /api/gmail/scan...");
       setLoading(true);
@@ -70,31 +73,12 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const showDashboard = pathname === '/dashboard' || pathname.startsWith('/dashboard');
-  if (showDashboard) {
-    return <Dashboard />;
-  }
-
-  if (pathname.startsWith('/connections/google')) {
-    return <GoogleConnections />;
-  }
-  if (pathname.startsWith('/connections/github')) {
-    return <GithubConnections />;
-  }
-  if (pathname.startsWith('/dormant-app/')) {
-    return <DormantAppDetail />;
-  }
-  if (pathname.startsWith('/app/'))
-    return <AppDetail />;
-  if (pathname.startsWith('/connection-updated'))
-    return <ConnectionUpdated />;
-
   const handleLogin = () => {
     setLoading(true);
     window.location.href = 'http://localhost:8000/api/google/auth';
   };
 
-  return (
+  const LoginScreen = (
     <div className="min-h-screen bg-gradient-to-br from-[#4A666D] via-[#324145] to-[#1A1D1D] flex items-center justify-center p-8 lg:p-24 relative overflow-hidden">
 
       {/* Background Glow */}
@@ -154,6 +138,18 @@ function App() {
       </div>
 
     </div>
+  );
+
+  return (
+    <Routes>
+      <Route path="/" element={LoginScreen} />
+      <Route path="/dashboard/*" element={<Dashboard />} />
+      <Route path="/connections/google/*" element={<GoogleConnections />} />
+      <Route path="/connections/github/*" element={<GithubConnections />} />
+      <Route path="/dormant-app/*" element={<DormantAppDetail />} />
+      <Route path="/app/:domain" element={<AppDetail />} />
+      <Route path="/connection-updated/*" element={<ConnectionUpdated />} />
+    </Routes>
   );
 }
 

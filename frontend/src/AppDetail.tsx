@@ -1,4 +1,5 @@
 import { useScan } from './context/ScanContext';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const imgLogo = "/Logo.png";
 const imgGoogleIcon = "https://www.figma.com/api/mcp/asset/ed29f973-aec6-4c47-9290-590da61a0a11"; // google nav
@@ -17,30 +18,27 @@ const fallbackIcons: Record<string, string> = {
 
 export default function AppDetail() {
   const { scanData } = useScan();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { domain } = useParams();
   
-  // Extract app name from URL search params or path
-  const params = new URLSearchParams(window.location.search);
-  let appName = params.get('app');
-  if (!appName) {
-    const parts = window.location.pathname.split('/');
-    appName = decodeURIComponent(parts[parts.length - 1]);
-  }
+  const params = new URLSearchParams(location.search);
   const provider = params.get('provider') || 'Google';
   
   const rawServices = scanData?.services || [];
-  const appData: any = rawServices.find((s: any) => 
-    s.domain === appName || 
-    s.service_name === appName || 
-    s.display_name === appName || 
-    s.name === appName
+  const appData: any = location.state?.service || rawServices.find((s: any) => 
+    s.domain === domain || 
+    s.service_name === domain || 
+    s.display_name === domain || 
+    s.name === domain
   );
 
   const handleRemove = () => {
-    window.location.href = `/connection-updated?provider=${provider}&action=removed&app=${encodeURIComponent(appName || '')}`;
+    navigate(`/connection-updated?provider=${provider}&action=removed&app=${encodeURIComponent(domain || '')}`);
   };
 
   const handleContinue = () => {
-    window.location.href = `/connection-updated?provider=${provider}&action=allowed&app=${encodeURIComponent(appName || '')}`;
+    navigate(`/connection-updated?provider=${provider}&action=allowed&app=${encodeURIComponent(domain || '')}`);
   };
 
   if (!appData) {
@@ -82,13 +80,13 @@ export default function AppDetail() {
     >
       {/* sidebar */}
       <div className="w-48 flex flex-col items-center py-8 space-y-8 bg-gradient-to-b from-[#2c4451] to-[#606779] shadow-[2px_3px_0px_0px_rgba(42,42,42,0.47)]">
-        <img src={imgLogo} className="w-24 h-24 cursor-pointer" alt="logo" onClick={() => (window.location.href = '/dashboard')} />
-        <div className="relative cursor-pointer" onClick={() => (window.location.href = '/connections/google')}>
+        <img src={imgLogo} className="w-24 h-24 cursor-pointer" alt="logo" onClick={() => navigate('/dashboard')} />
+        <div className="relative cursor-pointer" onClick={() => navigate('/connections/google')}>
           <div className={provider === 'Google' ? 'bg-gradient-to-b from-[#2c4451] to-[#606779] p-2 rounded-lg shadow-[0_0_250px_0_#696969,0_0_159.84px_0_#696969,0_0_93.24px_0_#696969,0_0_46.62px_0_#696969,0_0_13.32px_0_#696969,0_0_6.66px_0_#696969]' : ''}>
             <img src={imgGoogleIcon} className="w-12 h-12" alt="google" />
           </div>
         </div>
-        <div className="relative cursor-pointer opacity-50" onClick={() => (window.location.href = '/connections/github')}>
+        <div className="relative cursor-pointer opacity-50" onClick={() => navigate('/connections/github')}>
           <div className={provider === 'GitHub' ? 'bg-gradient-to-b from-[#2c4451] to-[#606779] p-2 rounded-lg shadow-[0_0_250px_0_#696969,0_0_159.84px_0_#696969,0_0_93.24px_0_#696969,0_0_46.62px_0_#696969,0_0_13.32px_0_#696969,0_0_6.66px_0_#696969]' : ''}>
             <img src={imgGithubIcon} className="w-12 h-12" alt="github" />
           </div>
