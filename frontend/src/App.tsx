@@ -1,6 +1,12 @@
-import React from 'react';
+import Dashboard from './Dashboard';
 
 function App() {
+  const pathname = window.location.pathname;
+  const showDashboard = pathname === '/dashboard' || pathname.startsWith('/dashboard');
+  if (showDashboard) {
+    return <Dashboard />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#4A666D] via-[#324145] to-[#1A1D1D] flex items-center justify-center p-8 lg:p-24 relative overflow-hidden">
       
@@ -37,10 +43,10 @@ function App() {
 
           {/* Action Buttons */}
           <div className="flex items-center space-x-6 pt-4">
-            <button className="px-10 py-3.5 rounded-2xl bg-[#324145]/80 hover:bg-[#324145] text-white font-medium border border-white/10 transition-colors">
+            <button onClick={() => window.location.href = '/dashboard'} className="px-10 py-3.5 rounded-2xl bg-[#324145]/80 hover:bg-[#324145] text-white font-medium border border-white/10 transition-colors">
               Log In
             </button>
-            <button className="px-10 py-3.5 rounded-2xl bg-[#324145]/80 hover:bg-[#324145] text-white font-medium border border-white/10 transition-colors">
+            <button onClick={() => window.location.href = '/dashboard'} className="px-10 py-3.5 rounded-2xl bg-[#324145]/80 hover:bg-[#324145] text-white font-medium border border-white/10 transition-colors">
               Sign Up
             </button>
           </div>
