@@ -1,4 +1,4 @@
-const imgLogo = "https://www.figma.com/api/mcp/asset/92460199-ba19-47a6-8da1-845ae154e86e";
+const imgLogo = "/Logo.png";
 const imgGoogleIcon = "https://www.figma.com/api/mcp/asset/ed29f973-aec6-4c47-9290-590da61a0a11";
 const imgGithubIcon = "https://www.figma.com/api/mcp/asset/4b9c73a1-3138-43c8-9a1c-c043c76412d7";
 const imgSearchIcon = "https://www.figma.com/api/mcp/asset/097c0775-4990-4f57-96a4-701e0a9d84e9";

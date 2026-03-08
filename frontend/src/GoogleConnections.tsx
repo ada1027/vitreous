@@ -3,7 +3,7 @@ const imgSearch = "https://www.figma.com/api/mcp/asset/3b8723bd-848a-4b89-84bf-f
 const imgThreeDots = "https://www.figma.com/api/mcp/asset/07adea7f-1661-492f-9c72-6753874078e3";
 const imgFilter = "https://www.figma.com/api/mcp/asset/4056d343-f118-457a-980d-998170449f3d";
 const imgSort = "https://www.figma.com/api/mcp/asset/cb00f331-3450-4cb5-8a19-f557da44a5bf";
-const imgLogo = "https://www.figma.com/api/mcp/asset/54e64e2b-a2c3-4411-8d35-540538026387";
+const imgLogo = "/Logo.png";
 const imgGoogleIcon = "https://www.figma.com/api/mcp/asset/a293c88c-33e0-47b2-873b-2c6253f84752"; // google nav
 const imgGithubIcon = "https://www.figma.com/api/mcp/asset/33207a9e-280b-4adf-b883-50b767ad3dda"; // github nav
 

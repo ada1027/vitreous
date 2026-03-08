@@ -1,5 +1,5 @@
 // Connection confirmation/updated page
-const imgLogo = "https://www.figma.com/api/mcp/asset/0fe93103-bc67-4a5e-873a-19dd2f90e384";
+const imgLogo = "/Logo.png";
 const imgGoogleIcon = "https://www.figma.com/api/mcp/asset/ed29f973-aec6-4c47-9290-590da61a0a11"; // google nav
 const imgGithubIcon = "https://www.figma.com/api/mcp/asset/4b9c73a1-3138-43c8-9a1c-c043c76412d7"; // github nav
 

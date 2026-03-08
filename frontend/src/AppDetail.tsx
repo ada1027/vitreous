@@ -1,5 +1,5 @@
 const imgAppIcon = "https://www.figma.com/api/mcp/asset/3e32cb71-5785-452b-8975-5b36638c5822"; // Pinterest icon
-const imgLogo = "https://www.figma.com/api/mcp/asset/1d18b4f1-b185-4b8d-a1a2-3bbce0301d9f";
+const imgLogo = "/Logo.png";
 const imgGoogleIcon = "https://www.figma.com/api/mcp/asset/ed29f973-aec6-4c47-9290-590da61a0a11"; // google nav
 const imgGithubIcon = "https://www.figma.com/api/mcp/asset/4b9c73a1-3138-43c8-9a1c-c043c76412d7"; // github nav
 
