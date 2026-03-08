@@ -31,7 +31,7 @@ export default function GoogleConnections() {
       }
       analyzeTriggered.current = true;
       setAnalyzing(true);
-      fetch('http://localhost:8000/api/gmail/analyze', {
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/gmail/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ services: scanData.services }),

@@ -51,7 +51,7 @@ function App() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 60000);
 
-      fetch(`http://localhost:8000/api/gmail/scan?token=${tokenToUse}`,
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/gmail/scan?token=${tokenToUse}`,
         { signal: controller.signal }
       )
         .then((res) => res.json())
@@ -75,7 +75,7 @@ function App() {
 
   const handleLogin = () => {
     setLoading(true);
-    window.location.href = 'http://localhost:8000/api/google/auth';
+    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/api/google/auth`;
   };
 
   const LoginScreen = (
