@@ -42,10 +42,7 @@ function App() {
           
           {/* Logo Context */}
           <div className="flex items-center space-x-3">
-            <div className="flex -space-x-3">
-              <div className="w-10 h-10 rounded-full bg-white/20 border border-white/10 backdrop-blur-sm" />
-              <div className="w-10 h-10 rounded-full bg-white/40 border border-white/20 backdrop-blur-md" />
-            </div>
+            <img src="/Logo.png" alt="Vitreous Logo" className="w-16 h-16" />
             <h2 className="text-white text-3xl font-serif font-bold tracking-wide">Vitreous</h2>
           </div>
 
