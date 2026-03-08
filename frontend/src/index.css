@@ -4,7 +4,7 @@
 
 @layer utilities {
   .bg-radial-glow {
-    background-image: radial-gradient(circle at center, rgba(147, 197, 253, 0.15) 0%, transparent 70%);
+    background-image: radial-gradient(ellipse at top, rgba(147, 197, 253, 0.15) 0%, transparent 30%);
   }
 }
 
