@@ -14,16 +14,16 @@ document.getElementById("check").onclick = () => {
     PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()
       .then(supported => {
         if (supported) {
-          result.textContent = "✅ Your device supports Passkeys!";
+          result.textContent = "Your device supports Passkeys!";
         } else {
-          result.textContent = "⚠️ WebAuthn supported, but no device Passkey found.";
+          result.textContent = " WebAuthn supported, but no device Passkey found.";
         }
       })
       .catch(err => {
-        result.textContent = "❌ Error detecting Passkeys: " + err;
+        result.textContent = "Error detecting Passkeys: " + err;
       });
   } else {
-    result.textContent = "❌ Passkeys / WebAuthn NOT supported in this browser.";
+    result.textContent = "Passkeys / WebAuthn NOT supported in this browser.";
   }
 };
 </script>

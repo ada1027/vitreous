@@ -1,4 +1,4 @@
-# Step 1: Login options
+#Login options
 @router.post("/login/options")
 async def login_options(request: Request):
     data = await request.json()
@@ -11,7 +11,7 @@ async def login_options(request: Request):
     user["auth_state"] = state
     return auth_data
 
-# Step 2: Verify Login
+#Verify Login
 @router.post("/login/verify")
 async def login_verify(request: Request):
     data = await request.json()
