@@ -1,30 +1,63 @@
 import httpx
+import asyncio
 from typing import List, Dict, Any
+from datetime import datetime
+
+def _extract_domain(from_header: str) -> str:
+    # Basic extraction: grab anything between @ and > or to the end of the string
+    if "@" in from_header:
+        parts = from_header.split("@")
+        if len(parts) > 1:
+            domain_part = parts[-1].split(">")[0].strip()
+            return domain_part.lower()
+    return from_header.lower()
+
+def _parse_date(date_str: str) -> datetime:
+    # Try parsing common email date formats to allow sorting
+    import email.utils
+    parsed = email.utils.parsedate_to_datetime(date_str)
+    if parsed:
+        return parsed
+    # Fallback to current time if unparseable
+    return datetime.now()
 
 async def scan_inbox(access_token: str) -> List[Dict[str, Any]]:
-    query = "unsubscribe"
     headers = {"Authorization": f"Bearer {access_token}"}
-    params = {
-        "q": query,
-        "maxResults": 100
-    }
-    
     messages_url = "https://gmail.googleapis.com/gmail/v1/users/me/messages"
     
+    queries = [
+        "subject:(welcome OR \"thanks for signing up\" OR \"verify your email\" OR \"activate your account\")",
+        "subject:(receipt OR invoice OR \"payment confirmation\" OR \"subscription renewed\" OR \"billing\")",
+        "unsubscribe before:2020/01/01",
+        "subject:(account OR login OR \"sign in\" OR security)",
+        "unsubscribe after:2020/01/01 before:2022/06/01",
+        "unsubscribe after:2022/06/01 before:2024/01/01"
+    ]
+    
     async with httpx.AsyncClient() as client:
-        search_response = await client.get(messages_url, headers=headers, params=params)
-        search_response.raise_for_status()
-        
-        data = search_response.json()
-        messages = data.get("messages", [])
-        
-        results = []
-        for msg in messages:
-            msg_id = msg["id"]
+        async def fetch_ids(query):
+            params = {"q": query, "maxResults": 50}
+            resp = await client.get(messages_url, headers=headers, params=params)
+            if resp.status_code == 200:
+                return resp.json().get("messages", [])
+            return []
             
+        results_lists = await asyncio.gather(*[fetch_ids(q) for q in queries])
+        
+        unique_message_ids = set()
+        messages_to_fetch = []
+        for lst in results_lists:
+            if lst:
+                for msg in lst:
+                    if msg["id"] not in unique_message_ids:
+                        unique_message_ids.add(msg["id"])
+                        messages_to_fetch.append(msg)
+                        
+        extracted_results = []
+        for msg in messages_to_fetch:
+            msg_id = msg["id"]
             msg_url = f"{messages_url}/{msg_id}"
             
-            # Using a list of tuples to ensure duplicate query keys are formatted correctly
             msg_params = [
                 ("format", "metadata"),
                 ("metadataHeaders", "From"),
@@ -56,6 +89,22 @@ async def scan_inbox(access_token: str) -> List[Dict[str, Any]]:
                 elif name.lower() == "date":
                     extracted["date"] = value
                     
-            results.append(extracted)
+            extracted_results.append(extracted)
             
-        return results
+        # Deduplicate by domain keeping the first occurrence
+        domain_map = {}
+        for item in extracted_results:
+            domain = _extract_domain(item["from_address"])
+            
+            if domain not in domain_map:
+                domain_map[domain] = item
+                    
+        # Return up to 150 unique domains based on insertion order (first match)
+        final_results = []
+        for x in domain_map.values():
+            if len(final_results) >= 150:
+                break
+            if isinstance(x, dict):
+                final_results.append(x)
+        
+        return final_results
