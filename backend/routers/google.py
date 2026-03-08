@@ -62,4 +62,5 @@ async def google_callback(code: str):
     if not access_token:
         raise HTTPException(status_code=500, detail="Failed to retrieve access token from Google")
         
-    return RedirectResponse(f"http://localhost:5173/?google_token={access_token}")
+    FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    return RedirectResponse(f"{FRONTEND_URL}/dashboard?google_token={access_token}")
