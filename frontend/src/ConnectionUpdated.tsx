@@ -23,7 +23,7 @@ export default function ConnectionUpdated() {
     >
       {/* sidebar */}
       <div className="w-48 flex flex-col items-center py-8 space-y-8 bg-gradient-to-b from-[#2c4451] to-[#606779] shadow-[2px_3px_0px_0px_rgba(42,42,42,0.47)]">
-        <img src={imgLogo} className="w-24 h-24" alt="logo" />
+        <img src={imgLogo} className="w-24 h-24 cursor-pointer" alt="logo" onClick={() => (window.location.href = '/dashboard')} />
         <div className="relative">
           <div className={provider === 'Google' ? 'bg-gradient-to-b from-[#2c4451] to-[#606779] p-2 rounded-lg shadow-[0_0_250px_0_#696969,0_0_159.84px_0_#696969,0_0_93.24px_0_#696969,0_0_46.62px_0_#696969,0_0_13.32px_0_#696969,0_0_6.66px_0_#696969]' : ''}>
             <img src={imgGoogleIcon} className="w-12 h-12" alt="google" />
