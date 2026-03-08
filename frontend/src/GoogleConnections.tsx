@@ -86,21 +86,21 @@ export default function GoogleConnections() {
               className="bg-transparent placeholder-white/75 ml-3 flex-1 focus:outline-none"
             />
           </div>
-          
+
           <div className="group relative">
             <button className="flex items-center bg-white/10 rounded-full px-4 py-2 space-x-2">
               <img src={imgFilter} alt="filter" className="w-6 h-6" />
               <span>{filterCategory || 'Filter'}</span>
             </button>
             <div className="absolute hidden group-hover:block mt-2 w-48 bg-[#2c4451] rounded-xl shadow-lg z-10 p-2">
-              <div 
+              <div
                 className={`p-2 hover:bg-white/10 rounded cursor-pointer ${!filterCategory ? 'bg-white/20' : ''}`}
                 onClick={() => setFilterCategory(null)}
               >
                 All Categories
               </div>
               {uniqueCategories.map(cat => (
-                <div 
+                <div
                   key={cat}
                   className={`p-2 hover:bg-white/10 rounded cursor-pointer ${filterCategory === cat ? 'bg-white/20' : ''}`}
                   onClick={() => setFilterCategory(cat)}
@@ -130,7 +130,7 @@ export default function GoogleConnections() {
             if (c.risk_level === 'HIGH') borderClass = 'border border-red-500/50 shadow-[0_0_10px_2px_rgba(239,68,68,0.2)]';
             else if (c.risk_level === 'MEDIUM') borderClass = 'border border-amber-500/50';
             else if (c.risk_level === 'LOW') borderClass = 'border border-green-500/50';
-            
+
             return (
               <div
                 key={c.id}

@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useScan } from './context/ScanContext';
-import ConnectionDetail from './ConnectionDetail';
 import Alerts from './Alerts';
 import DormantAccounts from './DormantAccounts';
 
 // Figma asset URLs - these were provided in the design export
+const imgImage1 = "https://www.figma.com/api/mcp/asset/e63a2a47-3162-4d09-b497-66f9dbd27d33"; // google logo
+const imgImage2 = "https://www.figma.com/api/mcp/asset/ee71325c-460c-4213-a2cd-391c0c18ea3e"; // github logo
 const imgImage7 = "https://www.figma.com/api/mcp/asset/92e49fcd-1210-4288-898d-d98a4dd21cc1"; // extra icon
 const imgImage6 = "https://www.figma.com/api/mcp/asset/89e496b8-de41-48c1-ad03-7b9336a9cbdc"; // extra icon
 const imgImage15 = "https://www.figma.com/api/mcp/asset/e240165a-273e-4426-9f15-965601e1645a"; // extra icon
@@ -13,7 +14,6 @@ const imgSlackLogo = "https://www.figma.com/api/mcp/asset/33207edf-fade-43fc-8e3
 
 export default function Dashboard() {
   const { scanData, loading } = useScan();
-  const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
   const [showAlerts, setShowAlerts] = useState<boolean>(false);
   const [showDormant, setShowDormant] = useState<boolean>(false);
   const breachCount = scanData?.summary?.breached_count || 0;
@@ -80,40 +80,26 @@ export default function Dashboard() {
         {/* linked accounts */}
         <h2 className="text-4xl font-serif mt-16">My Linked Accounts</h2>
         <div className="flex flex-wrap justify-center gap-8 mt-8">
-          {(!scanData?.services || scanData.services.length === 0) && !loading && (
-            <div className="text-white/50 text-xl font-light italic mt-4">
-              {scanData ? "No linked accounts discovered in your recent emails." : "Initiate a scan to discover your linked accounts."}
+          <div 
+            onClick={() => window.location.href = '/connections/google'} 
+            className="cursor-pointer w-72 h-32 flex flex-col justify-center bg-white/10 rounded-2xl px-6 py-4 space-y-2 hover:bg-white/20 transition-all border border-transparent hover:border-white/10"
+          >
+            <div className="flex items-center gap-4">
+              <img src={imgImage1} alt="Google" className="w-10 h-10" />
+              <p className="text-2xl font-serif">Google</p>
             </div>
-          )}
-          
-          {scanData?.services?.slice(0, 24).map((service: any, index: number) => {
-            const domainToken = service.domain || service.service_name || "unknown";
-            const cleanName = service.service_name || domainToken.split('.')[0];
-            const titleCaseName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
-            
-            return (
-              <div 
-                key={index}
-                onClick={() => setSelectedDomain(domainToken)} 
-                className="cursor-pointer max-w-sm flex items-center bg-white/10 rounded-2xl px-6 py-4 space-x-4 hover:bg-white/20 transition-all border border-transparent hover:border-white/10"
-              >
-                <div className="w-12 h-12 bg-[#2D3F44] rounded-full flex items-center justify-center text-xl font-serif font-bold text-[#A2B5B0]">
-                  {titleCaseName.charAt(0)}
-                </div>
-                <div>
-                  <p className="text-2xl font-serif truncate max-w-[200px]">{titleCaseName}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-sm font-sans text-emerald-100/70">{domainToken}</span>
-                    {service.is_breached && (
-                      <span className="bg-red-500/20 text-red-300 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-bold">
-                        Breached
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+            <p className="text-sm font-sans text-emerald-100/70">{scanData?.summary?.total_services || 0} connections discovered</p>
+          </div>
+
+          <div 
+            className="opacity-50 cursor-not-allowed w-72 h-32 flex flex-col justify-center bg-white/5 rounded-2xl px-6 py-4 space-y-2 border border-transparent"
+          >
+            <div className="flex items-center gap-4">
+              <img src={imgImage2} alt="Github" className="w-10 h-10 grayscale" />
+              <p className="text-2xl font-serif">Github</p>
+            </div>
+            <p className="text-sm font-sans text-gray-400">Coming Soon</p>
+          </div>
         </div>
 
         {/* add more section */}
@@ -130,12 +116,6 @@ export default function Dashboard() {
       </div>
 
       {/* OVERLAY RENDERERS */}
-      {selectedDomain && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-[#121819] backdrop-blur-md">
-          <ConnectionDetail domain={selectedDomain} onClose={() => setSelectedDomain(null)} />
-        </div>
-      )}
-      
       {showAlerts && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-[#121819] backdrop-blur-md">
           <Alerts onClose={() => setShowAlerts(false)} />
