@@ -48,14 +48,14 @@ export default function Dashboard() {
         {/* linked accounts */}
         <h2 className="text-4xl font-serif mt-16">My Linked Accounts</h2>
         <div className="flex flex-wrap justify-center gap-8 mt-8">
-          <div className="flex items-center bg-white/10 rounded-2xl px-6 py-4 space-x-4">
+          <div onClick={() => window.location.href = '/connections/google'} className="cursor-pointer flex items-center bg-white/10 rounded-2xl px-6 py-4 space-x-4">
             <img src={imgImage1} className="w-12 h-12" alt="Google" />
             <div>
               <p className="text-2xl">Google</p>
               <p className="text-sm">39 logins</p>
             </div>
           </div>
-          <div className="flex items-center bg-white/10 rounded-2xl px-6 py-4 space-x-4">
+          <div onClick={() => window.location.href = '/connections/github'} className="cursor-pointer flex items-center bg-white/10 rounded-2xl px-6 py-4 space-x-4">
             <img src={imgImage2} className="w-12 h-12" alt="Github" />
             <div>
               <p className="text-2xl">Github</p>

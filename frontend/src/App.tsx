@@ -1,4 +1,7 @@
 import Dashboard from './Dashboard';
+import GoogleConnections from './GoogleConnections';
+import GithubConnections from './GithubConnections';
+import AppDetail from './AppDetail';
 
 function App() {
   const pathname = window.location.pathname;
@@ -6,6 +9,14 @@ function App() {
   if (showDashboard) {
     return <Dashboard />;
   }
+  if (pathname.startsWith('/connections/google')) {
+    return <GoogleConnections />;
+  }
+  if (pathname.startsWith('/connections/github')) {
+    return <GithubConnections />;
+  }
+  if (pathname.startsWith('/app/'))
+    return <AppDetail />;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#4A666D] via-[#324145] to-[#1A1D1D] flex items-center justify-center p-8 lg:p-24 relative overflow-hidden">
