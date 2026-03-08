@@ -2,6 +2,7 @@ import Dashboard from './Dashboard';
 import GoogleConnections from './GoogleConnections';
 import GithubConnections from './GithubConnections';
 import AppDetail from './AppDetail';
+import ConnectionUpdated from './ConnectionUpdated';
 
 function App() {
   const pathname = window.location.pathname;
@@ -17,6 +18,8 @@ function App() {
   }
   if (pathname.startsWith('/app/'))
     return <AppDetail />;
+  if (pathname.startsWith('/connection-updated'))
+    return <ConnectionUpdated />;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#4A666D] via-[#324145] to-[#1A1D1D] flex items-center justify-center p-8 lg:p-24 relative overflow-hidden">

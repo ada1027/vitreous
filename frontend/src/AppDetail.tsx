@@ -66,13 +66,11 @@ export default function AppDetail() {
   const appData = appDetailsMap[appName] || appDetailsMap['Pinterest'];
 
   const handleRemove = () => {
-    alert(`Removed connection: ${appName}`);
-    window.history.back();
+    window.location.href = `/connection-updated?provider=${provider}&action=removed&app=${encodeURIComponent(appName)}`;
   };
 
   const handleContinue = () => {
-    alert(`Continuing to allow ${appName}`);
-    window.history.back();
+    window.location.href = `/connection-updated?provider=${provider}&action=allowed&app=${encodeURIComponent(appName)}`;
   };
 
   return (
