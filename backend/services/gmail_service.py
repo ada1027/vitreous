@@ -88,18 +88,56 @@ async def scan_inbox(access_token: str) -> List[Dict[str, Any]]:
                     extracted["subject"] = value
                 elif name.lower() == "date":
                     extracted["date"] = value
-                    
-            extracted_results.append(extracted)
             
-        # Deduplicate by domain keeping the first occurrence
+            extracted_results.append(extracted)
+                    
+        # Deduplicate by domain tracking first_seen and last_seen
+        from datetime import datetime, timezone
+        import email.utils
+        
+        def safe_get_dt(dstr: str) -> datetime:
+            try:
+                dt = email.utils.parsedate_to_datetime(dstr)
+                if getattr(dt, "tzinfo", None) is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                return dt
+            except Exception:
+                return datetime.now(timezone.utc)
+
         domain_map = {}
         for item in extracted_results:
-            domain = _extract_domain(item["from_address"])
-            
+            domain = _extract_domain(item.get("from_address", ""))
+            date_str = item.get("date", "")
+            if not domain:
+                continue
+                
             if domain not in domain_map:
+                item["first_seen"] = date_str
+                item["last_seen"] = date_str
+                item["is_ghost"] = False
                 domain_map[domain] = item
+            else:
+                existing = domain_map[domain]
+                dt_new = safe_get_dt(date_str)
+                dt_first = safe_get_dt(existing["first_seen"])
+                dt_last = safe_get_dt(existing["last_seen"])
+                
+                if dt_new < dt_first:
+                    existing["first_seen"] = date_str
+                if dt_new > dt_last:
+                    existing["last_seen"] = date_str
                     
-        # Return up to 150 unique domains based on insertion order (first match)
+                domain_map[domain] = existing
+                
+        # Evaluate is_ghost for all domains
+        for k, v in domain_map.items():
+            dt_first = safe_get_dt(v["first_seen"])
+            dt_last = safe_get_dt(v["last_seen"])
+            # If both first and last seen are before 2024
+            if dt_first.year < 2024 and dt_last.year < 2024:
+                v["is_ghost"] = True
+                    
+        # Return up to 150 unique domains based on insertion order
         final_results = []
         for x in domain_map.values():
             if len(final_results) >= 150:
