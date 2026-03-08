@@ -1,0 +1,27 @@
+﻿
+C:\Users\adahu\vitreous\vitreous\frontend\src\Alerts.tsx
+  7:7  error  'imgXIcon' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  8:7  error  'imgWarning' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\adahu\vitreous\vitreous\frontend\src\App.tsx
+  44:6  warning  React Hook useEffect has missing dependencies: 'googleToken', 'pathname', 'setGoogleToken', 'setLoading', and 'setScanData'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\adahu\vitreous\vitreous\frontend\src\DormantAccounts.tsx
+  35:5  error  Error: This value cannot be modified
+
+Modifying a variable defined outside a component or hook is not allowed. Consider using an effect.
+
+C:\Users\adahu\vitreous\vitreous\frontend\src\DormantAccounts.tsx:35:5
+  33 |
+  34 |   const handleAppClick = (appName: string, provider: string) => {
+> 35 |     window.location.href = `/dormant-app/${encodeURIComponent(appName)}?provider=${provider}`;
+     |     ^^^^^^^^^^^^^^^ value cannot be modified
+  36 |   };
+  37 |
+  38 |   const rawServices = scanData?.services || [];  react-hooks/immutability
+
+C:\Users\adahu\vitreous\vitreous\frontend\src\context\ScanContext.tsx
+  57:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+Γ£û 5 problems (4 errors, 1 warning)
+
