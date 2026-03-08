@@ -28,7 +28,12 @@ export default function AppDetail() {
   const provider = params.get('provider') || 'Google';
   
   const rawServices = scanData?.services || [];
-  const appData = rawServices.find(s => s.name === appName || s.display_name === appName);
+  const appData: any = rawServices.find((s: any) => 
+    s.domain === appName || 
+    s.service_name === appName || 
+    s.display_name === appName || 
+    s.name === appName
+  );
 
   const handleRemove = () => {
     window.location.href = `/connection-updated?provider=${provider}&action=removed&app=${encodeURIComponent(appName || '')}`;
@@ -111,38 +116,47 @@ export default function AppDetail() {
           {/* app header */}
           <div className="flex items-center gap-6 mb-8">
             {iconUrl ? (
-              <img src={iconUrl} className="w-20 h-20 rounded-lg" alt={appData.display_name} />
+              <img src={iconUrl} className="w-20 h-20 rounded-lg" alt={appData.display_name || appData.service_name} />
             ) : (
               <div className="w-20 h-20 rounded-lg bg-white/5 flex items-center justify-center text-3xl font-bold border border-white/10">
-                {appData.display_name.charAt(0)}
+                {(appData.display_name || appData.service_name || "U").charAt(0).toUpperCase()}
               </div>
             )}
             <div>
-              <h2 className="text-5xl font-medium">{appData.display_name}</h2>
-              {appData.category && <p className="text-white/50 mt-1">{appData.category}</p>}
+              <h2 className="text-5xl font-medium">{appData.display_name || appData.service_name || appData.domain}</h2>
+              {appData.category && <p className="text-white/50 mt-1 capitalize">{appData.category}</p>}
             </div>
           </div>
 
           {/* details */}
           <div className="space-y-4 mb-8 text-sm">
-            <p>
-              <span className="font-medium text-white/50">Account connection:</span> {provider}
+            <p className="flex justify-between items-center border-b border-white/5 pb-3">
+              <span className="font-medium text-white/50">Provider</span> 
+              <span className="font-semibold">{provider}</span>
             </p>
-            <div>
-              <p className="font-medium mb-2 text-white/50">Shared Information:</p>
-              <ul className="list-disc list-inside space-y-1 ml-2">
-                {appData.data_shared.map((info) => (
-                  <li key={info}>{info}</li>
-                ))}
-              </ul>
-            </div>
-            <p>
-              <span className="font-medium text-white/50">Date shared:</span> {new Date(appData.first_seen).toLocaleDateString()}
+            <p className="flex justify-between items-center border-b border-white/5 pb-3">
+              <span className="font-medium text-white/50">Service Domain</span> 
+              <span>{appData.domain || 'N/A'}</span>
+            </p>
+            <p className="flex justify-between items-center border-b border-white/5 pb-3">
+              <span className="font-medium text-white/50">Category</span> 
+              <span className="capitalize">{appData.category || 'Other'}</span>
+            </p>
+            <p className="flex justify-between items-center border-b border-white/5 pb-3">
+              <span className="font-medium text-white/50">Connection Type</span> 
+              <span className="capitalize">{appData.type || 'Unknown'}</span>
+            </p>
+            <p className="flex justify-between items-center border-b border-white/5 pb-3">
+              <span className="font-medium text-white/50">Date Discovered</span> 
+              <span>{appData.date || appData.first_seen ? new Date(appData.date || appData.first_seen).toLocaleDateString() : 'Unknown'}</span>
             </p>
 
-            <div className="mt-6 p-4 bg-white/5 rounded-xl border border-white/10">
-              <h3 className="font-medium text-white/50 mb-1">Recommendation</h3>
-              <p>{appData.priority_action}</p>
+            <div className="mt-6 p-4 bg-white/5 rounded-xl border border-white/10 shadow-inner">
+              <h3 className="font-medium text-emerald-100/70 mb-2 flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Recommendation
+              </h3>
+              <p className="leading-relaxed">{appData.priority_action || "Review this connection for any unnecessary permissions."}</p>
             </div>
           </div>
 

@@ -1,6 +1,7 @@
 import os
 import time
 import httpx
+from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException, Query
 from typing import Dict, Any, List
 
@@ -17,6 +18,16 @@ noisy_terms = [
     'mailchimp', 'sendgrid', 'constantcontact', 'googlemail', 'mailer', 
     'notification', 'noreply'
 ]
+
+class AnalyzeRequest(BaseModel):
+    services: List[Dict[str, Any]]
+
+@router.post("/gmail/analyze")
+async def gmail_analyze(request: AnalyzeRequest):
+    if not request.services:
+        return {"services": [], "insight": ""}
+    from services.gemini_service import analyze_services
+    return await analyze_services(request.services)
 
 @router.get("/gmail/scan")
 async def gmail_scan(token: str = Query(..., description="The Google OAuth access token")):
