@@ -29,12 +29,16 @@ export default function Dashboard() {
         {/* alert/dormant cards */}
         <div className="flex flex-wrap justify-center gap-8 mt-12">
           <div className="relative w-64 h-40 bg-white/10 rounded-2xl p-4 shadow-[0_0_10px_10px_rgba(238,84,84,0.25)]">
-            <div className="absolute left-4 top-4 text-2xl">⚠️</div>
+            <div className="absolute left-4 top-4">
+              <img src="/alert-icon.png" alt="Alert" className="w-10 h-10" />
+            </div>
             <h2 className="text-xl font-medium ml-12">Alerts</h2>
             <p className="text-sm ml-12 mt-2">2 data breaches detected</p>
           </div>
           <div onClick={() => window.location.href = '/dormant'} className="cursor-pointer relative w-64 h-40 bg-white/10 rounded-2xl p-4 shadow-[0_0_10px_10px_rgba(255,242,202,0.25)] hover:bg-white/20 transition-colors">
-            <div className="absolute left-4 top-4 text-2xl">💤</div>
+            <div className="absolute left-4 top-4">
+              <img src="/dormant-icon.png" alt="Dormant" className="w-8 h-8" />
+            </div>
             <h2 className="text-xl font-medium ml-12">Dormant</h2>
             <p className="text-sm ml-12 mt-2">
               Review 16 accounts not accessed &gt; 90 days
